@@ -1,0 +1,128 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Architecture Design - Shuwen Wang Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="white-spider.css" />
+  <script src="libraries/p5.min.js" defer></script>
+  <script src="space-effects.js" defer></script>
+  <script src="white-spider.js" defer></script>
+  <script src="protect-media.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <nav class="top-nav" aria-label="Page navigation">
+      <a class="back-link" href="https://shuwenwang110.github.io/Portfolio/" data-transition>Back to portfolio</a>
+      <p class="page-explain">Architecture is where my design thinking becomes most visible. These projects focus on relationships between nature, human activity, spatial systems, and the built environment.</p>
+    </nav>
+    <section class="project-hero">
+      <div>
+        <p class="eyebrow">Spatial design</p>
+        <h1 class="project-title">Architecture Design</h1>
+      </div>
+    </section>
+
+    <section class="series-block" aria-labelledby="series2024">
+      <div class="series-heading">
+        <p class="eyebrow">Series 01</p>
+        <h2 id="series2024">Botanical Simulation Architecture</h2>
+      </div>
+      <div class="click-gallery architecture-gallery" id="architecture2024"></div>
+    </section>
+
+    <section class="series-block" aria-labelledby="seriesSpatial">
+      <div class="series-heading">
+        <p class="eyebrow">Series 02</p>
+        <h2 id="seriesSpatial">Environmental Architecture Design</h2>
+      </div>
+      <div class="click-gallery architecture-gallery" id="architectureSpatial"></div>
+    </section>
+
+    <a class="bottom-back-link" href="https://shuwenwang110.github.io/Portfolio/" data-transition>Back to portfolio</a>
+  </main>
+
+  <div class="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview">
+    <img class="lightbox-image" src="" alt="" />
+  </div>
+  <div class="fade-screen" aria-hidden="true"></div>
+  <script>
+    const groups = [
+      {
+        target: "architecture2024",
+        title: "Botanical Simulation Architecture",
+        images: [1,2,3,4,5,6,8,9,10,11,12,13].map(number => `architecture-design/architecture-2024-${String(number).padStart(2, "0")}.png`)
+      },
+      {
+        target: "architectureSpatial",
+        title: "Environmental Architecture Design",
+        images: Array.from({ length: 20 }, (_, index) => `architecture-design/${index + 1}.jpg`)
+      }
+    ];
+
+    const lightbox = document.querySelector(".lightbox");
+    const lightboxImage = document.querySelector(".lightbox-image");
+
+    function openLightbox(src, alt) {
+      lightboxImage.src = src;
+      lightboxImage.alt = alt;
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.classList.add("lightbox-open");
+    }
+
+    function closeLightbox() {
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("lightbox-open");
+      setTimeout(() => {
+        lightboxImage.src = "";
+      }, 180);
+    }
+
+    groups.forEach(group => {
+      const gallery = document.getElementById(group.target);
+      group.images.forEach((src, index) => {
+        const number = String(index + 1).padStart(2, "0");
+        const button = document.createElement("button");
+        button.className = "click-card";
+        button.type = "button";
+        button.dataset.full = src;
+        button.setAttribute("aria-label", `Open ${group.title} page ${number}`);
+        button.innerHTML = `
+          <img src="${src}" alt="${group.title} page ${number}" loading="${index === 0 ? "eager" : "lazy"}" />
+          <span>${number}</span>
+        `;
+        gallery.appendChild(button);
+      });
+    });
+
+    document.querySelectorAll(".click-card").forEach(card => {
+      card.addEventListener("click", () => {
+        const image = card.querySelector("img");
+        openLightbox(card.dataset.full, image.alt);
+      });
+    });
+
+    lightbox.addEventListener("click", event => {
+      if (event.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && document.body.classList.contains("lightbox-open")) {
+        closeLightbox();
+      }
+    });
+
+    document.querySelectorAll("[data-transition]").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        document.body.classList.add("is-leaving");
+        setTimeout(() => {
+          window.location.href = link.href;
+        }, 520);
+      });
+    });
+  </script>
+</body>
+</html>
+
